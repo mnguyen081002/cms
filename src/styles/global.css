@@ -1,0 +1,37 @@
+@layer theme, base, clerk, components, utilities; /* Ensure Clerk is compatible with Tailwind CSS v4 */
+
+@import 'tailwindcss';
+
+/* Custom Theme Colors */
+@theme {
+  /* Semantic colors - Tên dễ nhớ cho các màu thường dùng */
+  --color-muted: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-body: #0b1220;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1e40af;
+
+  /* Input colors */
+  --color-input-bg: #ffffff;
+  --color-input-text: #0b1220;
+  --color-input-border: #d1d5db;
+  --color-input-border-focus: #2563eb;
+  --color-input-border-error: #ef4444;
+  --color-input-border-error-focus: #dc2626;
+
+  /* Button colors */
+  --color-button-primary-bg: #2563eb;
+  --color-button-primary-text: #ffffff;
+  --color-button-primary-hover: #1e40af;
+  --color-button-primary-focus: #3b82f6;
+
+  --color-button-secondary-bg: #f1f5f9;
+  --color-button-secondary-text: #0f172a;
+  --color-button-secondary-hover: #e2e8f0;
+  --color-button-secondary-focus: #cbd5e1;
+
+  --color-button-outline-border: #2563eb;
+  --color-button-outline-text: #2563eb;
+  --color-button-outline-hover: #eff6ff;
+  --color-button-outline-focus: #3b82f6;
+}
