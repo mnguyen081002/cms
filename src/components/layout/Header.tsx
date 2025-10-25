@@ -1,13 +1,16 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
+import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/lib/auth/context';
 import { COLORS } from '@/styles/colors';
 
 export function Header() {
+  const t = useTranslations('Header');
   const { user, signOut } = useAuth();
   const router = useRouter();
 
@@ -27,20 +30,21 @@ export function Header() {
         {/* Navigation Links */}
         <div className="flex items-center gap-6">
           <Link href="/" className="transition-colors hover:opacity-80" style={{ color: 'inherit' }}>
-            Home
+            {t('home')}
           </Link>
           <Link href="/posts" className="transition-colors hover:opacity-80" style={{ color: 'inherit' }}>
-            Posts
+            {t('posts')}
           </Link>
           {user && (
             <Link href="/dashboard" className="transition-colors hover:opacity-80" style={{ color: 'inherit' }}>
-              Dashboard
+              {t('dashboard')}
             </Link>
           )}
         </div>
 
-        {/* Auth Buttons */}
+        {/* Auth Buttons & Language Switcher */}
         <div className="flex items-center gap-3">
+          <LocaleSwitcher variant="header" />
           {user ? (
             <>
               <span className="text-sm text-gray-300">{user.email}</span>
@@ -62,7 +66,7 @@ export function Header() {
                   e.currentTarget.style.color = 'white';
                 }}
               >
-                Logout
+                {t('logout')}
               </Button>
             </>
           ) : (
@@ -84,12 +88,12 @@ export function Header() {
                     e.currentTarget.style.color = 'white';
                   }}
                 >
-                  Login
+                  {t('login')}
                 </Button>
               </Link>
               <Link href="/auth/register">
                 <Button variant="primary" size="sm">
-                  Sign Up
+                  {t('sign_up')}
                 </Button>
               </Link>
             </>

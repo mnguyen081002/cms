@@ -1,31 +1,35 @@
+'use client';
+
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { COLORS } from '@/styles/colors';
 
 export function Footer() {
+  const t = useTranslations('Footer');
   return (
     <footer style={{ backgroundColor: COLORS.header.bg, color: COLORS.header.text }} className="mt-16">
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* About */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">About</h3>
+            <h3 className="mb-4 text-lg font-semibold">{t('about_title')}</h3>
             <p className="text-sm text-gray-400">
-              A minimalist CMS for sharing your thoughts and ideas with the world.
+              {t('about_desc')}
             </p>
           </div>
 
           {/* Links */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Links</h3>
+            <h3 className="mb-4 text-lg font-semibold">{t('links_title')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/" className="text-gray-400 transition-colors hover:opacity-80">
-                  Home
+                  {t('home')}
                 </Link>
               </li>
               <li>
                 <Link href="/posts" className="text-gray-400 transition-colors hover:opacity-80">
-                  Posts
+                  {t('posts')}
                 </Link>
               </li>
             </ul>
@@ -33,16 +37,16 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Legal</h3>
+            <h3 className="mb-4 text-lg font-semibold">{t('legal_title')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/privacy" className="text-gray-400 transition-colors hover:opacity-80">
-                  Privacy Policy
+                  {t('privacy')}
                 </Link>
               </li>
               <li>
                 <Link href="/terms" className="text-gray-400 transition-colors hover:opacity-80">
-                  Terms of Service
+                  {t('terms')}
                 </Link>
               </li>
             </ul>
@@ -55,7 +59,7 @@ export function Footer() {
             &copy;
             {new Date().getFullYear()}
             {' '}
-            CMS. All rights reserved.
+            CMS. {t('copyright')}
           </p>
         </div>
       </div>

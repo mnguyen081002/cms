@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -21,6 +22,7 @@ type Post = {
 };
 
 export default function PostsPage() {
+  const t = useTranslations('Posts');
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -125,10 +127,10 @@ export default function PostsPage() {
     const past = new Date(date);
     const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    if (diffInSeconds < 60) return t('just_now');
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}${t('minutes_ago')}`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}${t('hours_ago')}`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}${t('days_ago')}`;
     return formatDate(date);
   };
 
@@ -143,18 +145,18 @@ export default function PostsPage() {
             <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
                 <h1 className="text-heading mb-3 text-4xl font-bold md:text-5xl">
-                  Discover Posts
+                  {t('title')}
                 </h1>
                 <p className="text-lg text-gray-600">
-                  Explore articles and stories from our community
+                  {t('subtitle')}
                 </p>
               </div>
               {!loading && totalCount > 0 && (
                 <div className="text-sm text-gray-500">
                   <span className="font-semibold text-gray-700">{totalCount}</span>
                   {' '}
-                  {totalCount === 1 ? 'post' : 'posts'}
-                  {search && ' found'}
+                  {totalCount === 1 ? t('post') : t('posts')}
+                  {search && ` ${t('found')}`}
                 </div>
               )}
             </div>
@@ -166,7 +168,7 @@ export default function PostsPage() {
               </div>
               <Input
                 type="text"
-                placeholder="Search posts by title..."
+                placeholder={t('search_placeholder')}
                 value={search}
                 onChange={e => updateParams(e.target.value)}
                 className="pl-12"
@@ -179,7 +181,7 @@ export default function PostsPage() {
                 <div className="flex min-h-[400px] items-center justify-center">
                   <div className="text-center">
                     <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
-                    <p className="text-gray-600">Loading posts...</p>
+                    <p className="text-gray-600">{t('loading')}</p>
                   </div>
                 </div>
               ) : posts.length === 0
@@ -191,16 +193,16 @@ export default function PostsPage() {
                         </svg>
                       </div>
                       <h3 className="text-heading mb-2 text-xl font-semibold">
-                        {search ? 'No posts found' : 'No posts yet'}
+                        {search ? t('no_posts_found') : t('no_posts_yet')}
                       </h3>
                       <p className="mb-6 text-gray-600">
                         {search
-                          ? 'Try adjusting your search terms or browse all posts.'
-                          : 'Be the first to share your thoughts and create a post!'}
+                          ? t('no_posts_search')
+                          : t('no_posts_create')}
                       </p>
                       {search && (
                         <Button variant="outline" onClick={() => updateParams('')}>
-                          Clear Search
+                          {t('clear_search')}
                         </Button>
                       )}
                     </Card>
@@ -293,7 +295,7 @@ export default function PostsPage() {
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
-                            Previous
+                            {t('previous')}
                           </Button>
 
                           <div className="flex items-center gap-2">
@@ -332,7 +334,7 @@ export default function PostsPage() {
                             disabled={page === totalPages}
                             className="flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
                           >
-                            Next
+                            {t('next')}
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>

@@ -1,0 +1,219 @@
+{
+  "RootLayout": {
+    "home_link": "Trang chủ",
+    "about_link": "Giới thiệu",
+    "counter_link": "Bộ đếm",
+    "portfolio_link": "Danh mục",
+    "sign_in_link": "Đăng Nhập",
+    "sign_up_link": "Đăng Ký",
+    "browse_posts": "Duyệt Bài Viết",
+    "get_started": "Bắt Đầu"
+  },
+  "BaseTemplate": {
+    "description": "Nền tảng quản lý nội dung hiện đại được xây dựng với Next.js và Tailwind CSS",
+    "made_with": "Được xây dựng với ❤️"
+  },
+  "Index": {
+    "meta_title": "Content Platform - Chia Sẻ Câu Chuyện Của Bạn",
+    "meta_description": "Nền tảng mạnh mẽ nhưng đơn giản để tạo, quản lý và chia sẻ nội dung của bạn. Viết bằng Markdown, xuất bản ngay lập tức.",
+    "sponsors_title": "Nhà tài trợ",
+    "hero_badge": "Quản Lý Nội Dung Hiện Đại",
+    "hero_title_1": "Chia Sẻ Câu Chuyện",
+    "hero_title_2": "Của Bạn Với Thế Giới",
+    "hero_description": "Nền tảng mạnh mẽ nhưng đơn giản để tạo, quản lý và chia sẻ nội dung của bạn. Viết bằng Markdown, xuất bản ngay lập tức và tiếp cận độc giả.",
+    "hero_explore_posts": "Khám Phá Bài Viết",
+    "hero_start_writing": "Bắt Đầu Viết",
+    "stats_fast": "Nhanh",
+    "stats_fast_desc": "Tốc Độ Ánh Sáng",
+    "stats_secure": "Bảo Mật",
+    "stats_secure_desc": "Dữ Liệu Được Bảo Vệ",
+    "stats_simple": "Đơn Giản",
+    "stats_simple_desc": "Dễ Sử Dụng",
+    "features_title": "Mọi Thứ Bạn Cần",
+    "features_subtitle": "Các tính năng mạnh mẽ giúp bạn tạo và chia sẻ nội dung tuyệt vời",
+    "feature_editor_title": "Trình Soạn Thảo Phong Phú",
+    "feature_editor_desc": "Viết bằng Markdown với xem trước trực tiếp. Định dạng nội dung đẹp mắt một cách dễ dàng.",
+    "feature_secure_title": "Bảo Mật & Riêng Tư",
+    "feature_secure_desc": "Dữ liệu của bạn được bảo vệ bằng bảo mật và xác thực cấp doanh nghiệp.",
+    "feature_fast_title": "Cực Kỳ Nhanh",
+    "feature_fast_desc": "Được xây dựng với Next.js 15 để có hiệu suất tối ưu và tải trang tức thì.",
+    "feature_search_title": "Tìm Kiếm Thông Minh",
+    "feature_search_desc": "Tìm bất kỳ bài viết nào ngay lập tức với khả năng tìm kiếm và lọc mạnh mẽ.",
+    "feature_media_title": "Hỗ Trợ Đa Phương Tiện",
+    "feature_media_desc": "Nhúng hình ảnh, video và đoạn mã một cách liền mạch trong bài viết của bạn.",
+    "feature_control_title": "Toàn Quyền Kiểm Soát",
+    "feature_control_desc": "Quản lý bản nháp, xuất bản, chỉnh sửa và xóa bài viết với quyền kiểm soát hoàn toàn.",
+    "cta_title": "Sẵn Sàng Bắt Đầu Viết?",
+    "cta_subtitle": "Tham gia cộng đồng của chúng tôi và chia sẻ câu chuyện của bạn với thế giới. Miễn phí và chỉ mất chưa đầy một phút.",
+    "cta_create_account": "Tạo Tài Khoản Miễn Phí",
+    "cta_browse_posts": "Khám Phá Bài Viết",
+    "footer_write_title": "Viết Tự Do",
+    "footer_write_desc": "Thể hiện bản thân với trình soạn thảo Markdown trực quan của chúng tôi",
+    "footer_publish_title": "Xuất Bản Ngay Lập Tức",
+    "footer_publish_desc": "Chia sẻ nội dung của bạn với thế giới trong vài giây",
+    "footer_track_title": "Theo Dõi Tiến Độ",
+    "footer_track_desc": "Quản lý tất cả bài viết của bạn từ bảng điều khiển đẹp mắt"
+  },
+  "Counter": {
+    "meta_title": "Bộ đếm",
+    "meta_description": "Ví dụ về thao tác cơ sở dữ liệu",
+    "security_powered_by": "Bảo mật, phát hiện bot và giới hạn tốc độ được hỗ trợ bởi"
+  },
+  "CounterForm": {
+    "presentation": "Bộ đếm được lưu trong cơ sở dữ liệu và tăng theo giá trị bạn cung cấp.",
+    "label_increment": "Tăng thêm",
+    "button_increment": "Tăng",
+    "error_increment_range": "Giá trị phải từ 1 đến 3"
+  },
+  "CurrentCount": {
+    "count": "Số đếm: {count}"
+  },
+  "About": {
+    "meta_title": "Giới thiệu",
+    "meta_description": "Mô tả trang giới thiệu",
+    "about_paragraph": "Chào mừng đến với trang Giới thiệu! Chúng tôi là một nhóm những cá nhân đam mê, tận tâm tạo ra phần mềm tuyệt vời.",
+    "translation_powered_by": "Dịch thuật được hỗ trợ bởi"
+  },
+  "Portfolio": {
+    "meta_title": "Danh mục",
+    "meta_description": "Chào mừng đến với trang danh mục của tôi!",
+    "presentation": "Chào mừng đến với trang danh mục của tôi! Tại đây bạn sẽ tìm thấy bộ sưu tập được tuyển chọn cẩn thận về công việc và thành tích của tôi. Thông qua danh mục này, tôi muốn thể hiện chuyên môn, sự sáng tạo và giá trị mà tôi có thể mang lại cho dự án của bạn.",
+    "portfolio_name": "Danh mục {name}",
+    "error_reporting_powered_by": "Báo cáo lỗi được hỗ trợ bởi",
+    "coverage_powered_by": "Độ phủ mã được hỗ trợ bởi"
+  },
+  "PortfolioSlug": {
+    "meta_title": "Danh mục {slug}",
+    "meta_description": "Mô tả danh mục {slug}",
+    "header": "Danh mục {slug}",
+    "content": "Tạo một bộ tài liệu quảng cáo và các yếu tố thương hiệu cho một sự kiện doanh nghiệp. Tạo ra một chủ đề thống nhất về mặt hình ảnh, bao gồm logo, áp phích, băng rôn và tài sản kỹ thuật số. Tích hợp bản sắc thương hiệu của khách hàng đồng thời truyền vào đó một cách tiếp cận đương đại và sáng tạo.",
+    "code_review_powered_by": "Đánh giá mã được hỗ trợ bởi"
+  },
+  "SignIn": {
+    "meta_title": "Đăng nhập",
+    "meta_description": "Đăng nhập vào tài khoản của bạn một cách liền mạch với quy trình đăng nhập thân thiện."
+  },
+  "SignUp": {
+    "meta_title": "Đăng ký",
+    "meta_description": "Dễ dàng tạo tài khoản thông qua quy trình đăng ký trực quan của chúng tôi."
+  },
+  "Dashboard": {
+    "meta_title": "Bảng điều khiển",
+    "hello_message": "Xin chào {email}!",
+    "alternative_message": "Muốn xây dựng SaaS nhanh hơn bằng cùng một stack? Thử <url></url>."
+  },
+  "UserProfile": {
+    "meta_title": "Hồ sơ người dùng"
+  },
+  "DashboardLayout": {
+    "dashboard_link": "Bảng điều khiển",
+    "user_profile_link": "Quản lý tài khoản",
+    "sign_out": "Đăng xuất"
+  },
+  "Posts": {
+    "title": "Khám Phá Bài Viết",
+    "subtitle": "Khám phá các bài viết và câu chuyện từ cộng đồng của chúng tôi",
+    "search_placeholder": "Tìm kiếm bài viết theo tiêu đề...",
+    "loading": "Đang tải bài viết...",
+    "no_posts_found": "Không tìm thấy bài viết",
+    "no_posts_yet": "Chưa có bài viết nào",
+    "no_posts_search": "Thử điều chỉnh từ khóa tìm kiếm hoặc duyệt tất cả bài viết.",
+    "no_posts_create": "Hãy là người đầu tiên chia sẻ suy nghĩ của bạn và tạo bài viết!",
+    "clear_search": "Xóa Tìm Kiếm",
+    "previous": "Trước",
+    "next": "Tiếp",
+    "post": "bài viết",
+    "posts": "bài viết",
+    "found": "tìm thấy",
+    "just_now": "Vừa xong",
+    "minutes_ago": "phút trước",
+    "hours_ago": "giờ trước",
+    "days_ago": "ngày trước"
+  },
+  "MyDashboard": {
+    "title": "Bài Viết Của Tôi",
+    "subtitle": "Quản lý và sắp xếp các bài viết blog của bạn",
+    "new_post": "Bài Viết Mới",
+    "loading": "Đang tải...",
+    "no_posts_yet": "Bạn chưa tạo bài viết nào.",
+    "no_posts_page": "Không tìm thấy bài viết trên trang này.",
+    "create_first": "Tạo Bài Viết Đầu Tiên",
+    "published": "Đã Xuất Bản",
+    "draft": "Bản Nháp",
+    "view": "Xem",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "delete_confirm": "Bạn có chắc chắn muốn xóa bài viết này?",
+    "delete_failed": "Không thể xóa bài viết",
+    "updated": "Đã cập nhật",
+    "previous": "Trước",
+    "next": "Tiếp",
+    "post": "bài viết",
+    "posts": "bài viết"
+  },
+  "PostDetail": {
+    "loading": "Đang tải bài viết...",
+    "not_found": "Không tìm thấy bài viết",
+    "no_permission": "Không tìm thấy bài viết hoặc bạn không có quyền xem.",
+    "load_failed": "Không thể tải bài viết",
+    "back_to_posts": "Quay Lại Bài Viết",
+    "draft": "Bản Nháp",
+    "edit_post": "Sửa Bài Viết",
+    "delete_post": "Xóa Bài Viết",
+    "delete_confirm": "Bạn có chắc chắn muốn xóa bài viết này?",
+    "delete_failed": "Không thể xóa bài viết"
+  },
+  "Auth": {
+    "back_to_home": "Quay Lại Trang Chủ",
+    "login_title": "Đăng Nhập",
+    "login_subtitle": "Đăng nhập vào tài khoản của bạn",
+    "signup_title": "Đăng Ký",
+    "signup_subtitle": "Tạo tài khoản mới",
+    "email": "Email",
+    "email_placeholder": "you@example.com",
+    "password": "Mật Khẩu",
+    "password_placeholder": "••••••••",
+    "confirm_password": "Xác Nhận Mật Khẩu",
+    "sign_in": "Đăng Nhập",
+    "sign_up": "Đăng Ký",
+    "signing_in": "Đang đăng nhập...",
+    "creating_account": "Đang tạo tài khoản...",
+    "no_account": "Chưa có tài khoản?",
+    "have_account": "Đã có tài khoản?",
+    "sign_in_link": "Đăng nhập",
+    "sign_up_link": "Đăng ký",
+    "error_unexpected": "Đã xảy ra lỗi không mong muốn",
+    "error_password_mismatch": "Mật khẩu không khớp",
+    "error_password_length": "Mật khẩu phải có ít nhất 6 ký tự",
+    "email_confirm_notice": "Bạn cần xác nhận địa chỉ email trước khi đăng nhập",
+    "check_email_title": "Kiểm Tra Email Của Bạn",
+    "check_email_message": "Chúng tôi đã gửi email xác nhận đến",
+    "next_steps": "Các Bước Tiếp Theo:",
+    "step_1": "Mở hộp thư email của bạn",
+    "step_2": "Nhấp vào liên kết xác nhận",
+    "step_3": "Quay lại đây để đăng nhập",
+    "go_to_signin": "Đến Trang Đăng Nhập",
+    "didnt_receive": "Không nhận được email?",
+    "try_again": "Thử lại"
+  },
+  "Header": {
+    "home": "Trang Chủ",
+    "posts": "Bài Viết",
+    "dashboard": "Bảng Điều Khiển",
+    "logout": "Đăng Xuất",
+    "login": "Đăng Nhập",
+    "sign_up": "Đăng Ký"
+  },
+  "Footer": {
+    "about_title": "Giới Thiệu",
+    "about_desc": "Một CMS tối giản để chia sẻ suy nghĩ và ý tưởng của bạn với thế giới.",
+    "links_title": "Liên Kết",
+    "home": "Trang Chủ",
+    "posts": "Bài Viết",
+    "legal_title": "Pháp Lý",
+    "privacy": "Chính Sách Bảo Mật",
+    "terms": "Điều Khoản Dịch Vụ",
+    "copyright": "Bảo lưu mọi quyền."
+  }
+}
+

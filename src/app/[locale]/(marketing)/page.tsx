@@ -23,10 +23,10 @@ export async function generateMetadata(props: IIndexProps) {
 export default async function Index(props: IIndexProps) {
   const { locale } = await props.params;
   setRequestLocale(locale);
-  // const t = await getTranslations({
-  //   locale,
-  //   namespace: 'Index',
-  // });
+  const t = await getTranslations({
+    locale,
+    namespace: 'Index',
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -39,29 +39,28 @@ export default async function Index(props: IIndexProps) {
               <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
-              Modern Content Management
+              {t('hero_badge')}
             </div>
 
             {/* Main Heading */}
             <h1 className="text-heading mb-6 text-5xl font-extrabold leading-tight md:text-6xl lg:text-7xl">
-              Share Your Stories
+              {t('hero_title_1')}
               <br />
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                With The World
+                {t('hero_title_2')}
               </span>
             </h1>
 
             {/* Description */}
             <p className="mx-auto mb-10 max-w-2xl text-lg text-gray-600 md:text-xl">
-              A powerful yet simple platform to create, manage, and share your content.
-              Write in Markdown, publish instantly, and reach your audience.
+              {t('hero_description')}
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link href="/posts">
                 <Button variant="primary" className="group flex items-center gap-2 px-8 py-6 text-lg">
-                  Explore Posts
+                  {t('hero_explore_posts')}
                   <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
@@ -69,7 +68,7 @@ export default async function Index(props: IIndexProps) {
               </Link>
               <Link href="/auth/register">
                 <Button variant="outline" className="px-8 py-6 text-lg">
-                  Start Writing
+                  {t('hero_start_writing')}
                 </Button>
               </Link>
             </div>
@@ -77,16 +76,16 @@ export default async function Index(props: IIndexProps) {
             {/* Stats */}
             <div className="mt-16 grid grid-cols-3 gap-8 border-t border-gray-200 pt-12">
               <div>
-                <div className="text-heading text-3xl font-bold md:text-4xl">Fast</div>
-                <div className="mt-2 text-sm text-gray-600">Lightning Speed</div>
+                <div className="text-heading text-3xl font-bold md:text-4xl">{t('stats_fast')}</div>
+                <div className="mt-2 text-sm text-gray-600">{t('stats_fast_desc')}</div>
               </div>
               <div>
-                <div className="text-heading text-3xl font-bold md:text-4xl">Secure</div>
-                <div className="mt-2 text-sm text-gray-600">Protected Data</div>
+                <div className="text-heading text-3xl font-bold md:text-4xl">{t('stats_secure')}</div>
+                <div className="mt-2 text-sm text-gray-600">{t('stats_secure_desc')}</div>
               </div>
               <div>
-                <div className="text-heading text-3xl font-bold md:text-4xl">Simple</div>
-                <div className="mt-2 text-sm text-gray-600">Easy to Use</div>
+                <div className="text-heading text-3xl font-bold md:text-4xl">{t('stats_simple')}</div>
+                <div className="mt-2 text-sm text-gray-600">{t('stats_simple_desc')}</div>
               </div>
             </div>
           </div>
@@ -98,10 +97,10 @@ export default async function Index(props: IIndexProps) {
         <div className="mx-auto max-w-6xl">
           <div className="mb-16 text-center">
             <h2 className="text-heading mb-4 text-4xl font-bold md:text-5xl">
-              Everything You Need
+              {t('features_title')}
             </h2>
             <p className="text-lg text-gray-600">
-              Powerful features to help you create and share amazing content
+              {t('features_subtitle')}
             </p>
           </div>
 
@@ -114,10 +113,10 @@ export default async function Index(props: IIndexProps) {
                 </svg>
               </div>
               <h3 className="text-heading mb-3 text-xl font-bold">
-                Rich Text Editor
+                {t('feature_editor_title')}
               </h3>
               <p className="text-gray-600">
-                Write in Markdown with live preview. Format your content beautifully with ease.
+                {t('feature_editor_desc')}
               </p>
             </div>
 
@@ -129,10 +128,10 @@ export default async function Index(props: IIndexProps) {
                 </svg>
               </div>
               <h3 className="text-heading mb-3 text-xl font-bold">
-                Secure & Private
+                {t('feature_secure_title')}
               </h3>
               <p className="text-gray-600">
-                Your data is protected with enterprise-grade security and authentication.
+                {t('feature_secure_desc')}
               </p>
             </div>
 
@@ -144,10 +143,10 @@ export default async function Index(props: IIndexProps) {
                 </svg>
               </div>
               <h3 className="text-heading mb-3 text-xl font-bold">
-                Lightning Fast
+                {t('feature_fast_title')}
               </h3>
               <p className="text-gray-600">
-                Built with Next.js 15 for optimal performance and instant page loads.
+                {t('feature_fast_desc')}
               </p>
             </div>
 
@@ -159,10 +158,10 @@ export default async function Index(props: IIndexProps) {
                 </svg>
               </div>
               <h3 className="text-heading mb-3 text-xl font-bold">
-                Smart Search
+                {t('feature_search_title')}
               </h3>
               <p className="text-gray-600">
-                Find any post instantly with powerful search and filtering capabilities.
+                {t('feature_search_desc')}
               </p>
             </div>
 
@@ -174,10 +173,10 @@ export default async function Index(props: IIndexProps) {
                 </svg>
               </div>
               <h3 className="text-heading mb-3 text-xl font-bold">
-                Media Support
+                {t('feature_media_title')}
               </h3>
               <p className="text-gray-600">
-                Embed images, videos, and code snippets seamlessly in your posts.
+                {t('feature_media_desc')}
               </p>
             </div>
 
@@ -189,10 +188,10 @@ export default async function Index(props: IIndexProps) {
                 </svg>
               </div>
               <h3 className="text-heading mb-3 text-xl font-bold">
-                Full Control
+                {t('feature_control_title')}
               </h3>
               <p className="text-gray-600">
-                Manage drafts, publish, edit, and delete posts with complete control.
+                {t('feature_control_desc')}
               </p>
             </div>
           </div>
@@ -213,11 +212,10 @@ export default async function Index(props: IIndexProps) {
             {/* Content */}
             <div className="relative">
               <h2 className="mb-4 text-4xl font-bold text-white md:text-5xl">
-                Ready to Start Writing?
+                {t('cta_title')}
               </h2>
               <p className="mb-8 text-lg text-blue-100 md:text-xl">
-                Join our community and share your stories with the world.
-                It's free and takes less than a minute.
+                {t('cta_subtitle')}
               </p>
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link href="/auth/register">
@@ -225,7 +223,7 @@ export default async function Index(props: IIndexProps) {
                     variant="secondary"
                     className="bg-white px-8 py-6 text-lg font-semibold text-blue-600 hover:bg-gray-100"
                   >
-                    Create Free Account
+                    {t('cta_create_account')}
                   </Button>
                 </Link>
                 <Link href="/posts">
@@ -233,7 +231,7 @@ export default async function Index(props: IIndexProps) {
                     variant="outline"
                     className="border-2 border-white px-8 py-6 text-lg font-semibold text-white hover:bg-white/10"
                   >
-                    Browse Posts
+                    {t('cta_browse_posts')}
                   </Button>
                 </Link>
               </div>
@@ -248,23 +246,23 @@ export default async function Index(props: IIndexProps) {
           <div className="grid gap-8 md:grid-cols-3">
             <div className="text-center">
               <div className="mb-2 text-2xl font-bold text-blue-600">✍️</div>
-              <h3 className="text-heading mb-2 font-semibold">Write Freely</h3>
+              <h3 className="text-heading mb-2 font-semibold">{t('footer_write_title')}</h3>
               <p className="text-sm text-gray-600">
-                Express yourself with our intuitive Markdown editor
+                {t('footer_write_desc')}
               </p>
             </div>
             <div className="text-center">
               <div className="mb-2 text-2xl font-bold text-purple-600">🚀</div>
-              <h3 className="text-heading mb-2 font-semibold">Publish Instantly</h3>
+              <h3 className="text-heading mb-2 font-semibold">{t('footer_publish_title')}</h3>
               <p className="text-sm text-gray-600">
-                Share your content with the world in seconds
+                {t('footer_publish_desc')}
               </p>
             </div>
             <div className="text-center">
               <div className="mb-2 text-2xl font-bold text-green-600">📊</div>
-              <h3 className="text-heading mb-2 font-semibold">Track Progress</h3>
+              <h3 className="text-heading mb-2 font-semibold">{t('footer_track_title')}</h3>
               <p className="text-sm text-gray-600">
-                Manage all your posts from a beautiful dashboard
+                {t('footer_track_desc')}
               </p>
             </div>
           </div>

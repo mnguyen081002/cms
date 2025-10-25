@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -21,6 +22,7 @@ type Post = {
 };
 
 export default function DashboardPage() {
+  const t = useTranslations('MyDashboard');
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -85,7 +87,7 @@ export default function DashboardPage() {
   }, [user, authLoading, router, supabase, page, postsPerPage]);
 
   const handleDelete = async (postId: string) => {
-    if (!confirm('Are you sure you want to delete this post?')) {
+    if (!confirm(t('delete_confirm'))) {
       return;
     }
 
@@ -101,7 +103,7 @@ export default function DashboardPage() {
       setPosts(posts.filter(p => p.id !== postId));
     } catch (err) {
       console.error('Error deleting post:', err);
-      alert('Failed to delete post');
+      alert(t('delete_failed'));
     }
   };
 
@@ -135,10 +137,11 @@ export default function DashboardPage() {
     const past = new Date(date);
     const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    const tPosts = useTranslations('Posts');
+    if (diffInSeconds < 60) return tPosts('just_now');
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}${tPosts('minutes_ago')}`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}${tPosts('hours_ago')}`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}${tPosts('days_ago')}`;
     return formatDate(date);
   };
 
@@ -147,7 +150,7 @@ export default function DashboardPage() {
       <div className="flex min-h-screen flex-col bg-white">
         <Header />
         <main className="flex flex-1 items-center justify-center">
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </main>
         <Footer />
       </div>
@@ -162,12 +165,12 @@ export default function DashboardPage() {
         <div className="mx-auto max-w-7xl px-4 py-12">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-heading mb-2 text-4xl font-semibold">My Posts</h1>
+              <h1 className="text-heading mb-2 text-4xl font-semibold">{t('title')}</h1>
               <p className="text-gray-600">
-                Manage and organize your blog posts
+                {t('subtitle')}
                 {!loading && totalCount > 0 && (
                   <span className="ml-2 font-semibold text-gray-700">
-                    ({totalCount} {totalCount === 1 ? 'post' : 'posts'})
+                    ({totalCount} {totalCount === 1 ? t('post') : t('posts')})
                   </span>
                 )}
               </p>
@@ -177,7 +180,7 @@ export default function DashboardPage() {
                 <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                New Post
+                {t('new_post')}
               </Button>
             </Link>
           </div>
@@ -187,12 +190,12 @@ export default function DashboardPage() {
                 <Card className="py-12 text-center">
                   <p className="mb-4 text-gray-600">
                     {totalCount === 0
-                      ? "You haven't created any posts yet."
-                      : "No posts found on this page."}
+                      ? t('no_posts_yet')
+                      : t('no_posts_page')}
                   </p>
                   {totalCount === 0 && (
                     <Link href="/dashboard/new">
-                      <Button variant="primary">Create Your First Post</Button>
+                      <Button variant="primary">{t('create_first')}</Button>
                     </Link>
                   )}
                 </Card>
@@ -218,7 +221,7 @@ export default function DashboardPage() {
                             post.published ? 'bg-green-600' : 'bg-yellow-600'
                           }`}
                           />
-                          {post.published ? 'Published' : 'Draft'}
+                          {post.published ? t('published') : t('draft')}
                         </span>
                       </div>
 
@@ -291,7 +294,7 @@ export default function DashboardPage() {
                               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                               </svg>
-                              <span>Updated {getTimeAgo(post.updated_at)}</span>
+                              <span>{t('updated')} {getTimeAgo(post.updated_at)}</span>
                             </div>
                           )}
                         </div>
@@ -305,7 +308,7 @@ export default function DashboardPage() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
-                            <span>View</span>
+                            <span>{t('view')}</span>
                           </button>
                         </Link>
                         <Link href={`/dashboard/${post.id}/edit`} className="flex-1">
@@ -313,13 +316,13 @@ export default function DashboardPage() {
                             <svg className="h-4 w-4 transition-transform group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
-                            <span>Edit</span>
+                            <span>{t('edit')}</span>
                           </button>
                         </Link>
                         <button
                           onClick={() => handleDelete(post.id)}
                           className="group/btn flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-medium text-red-600 transition-all duration-200 hover:border-red-400 hover:bg-red-50 hover:text-red-700"
-                          title="Delete post"
+                          title={t('delete')}
                         >
                           <svg className="h-4 w-4 transition-transform group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -342,7 +345,7 @@ export default function DashboardPage() {
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                       </svg>
-                      Previous
+                      {t('previous')}
                     </Button>
 
                     <div className="flex items-center gap-2">
@@ -382,7 +385,7 @@ export default function DashboardPage() {
                       disabled={page === Math.ceil(totalCount / postsPerPage)}
                       className="flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      Next
+                      {t('next')}
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>

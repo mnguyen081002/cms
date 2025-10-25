@@ -1,6 +1,7 @@
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 
+import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { AppConfig } from '@/utils/AppConfig';
 
 export default async function Layout(props: {
@@ -9,6 +10,10 @@ export default async function Layout(props: {
 }) {
   const { locale } = await props.params;
   setRequestLocale(locale);
+  const t = await getTranslations({
+    locale,
+    namespace: 'RootLayout',
+  });
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -31,19 +36,20 @@ export default async function Layout(props: {
               href="/posts"
               className="text-gray-600 transition-colors hover:text-gray-900"
             >
-              Browse Posts
+              {t('browse_posts')}
             </Link>
+            <LocaleSwitcher />
             <Link
               href="/auth/login"
               className="text-gray-600 transition-colors hover:text-gray-900"
             >
-              Sign In
+              {t('sign_in_link')}
             </Link>
             <Link
               href="/auth/register"
               className="rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2.5 font-semibold text-white transition-all hover:shadow-lg"
             >
-              Get Started
+              {t('get_started')}
             </Link>
           </div>
         </nav>
