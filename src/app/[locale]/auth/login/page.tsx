@@ -41,18 +41,32 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted px-4">
-      <Card className="w-full max-w-md shadow-md">
-        <div className="mb-8">
-          <h1 className="mb-2 text-3xl font-semibold text-heading">Login</h1>
-          <p className="text-gray-600">Sign in to your account</p>
-        </div>
+    <div className="flex min-h-screen items-center justify-center bg-muted px-4 py-8">
+      <div className="w-full max-w-md">
+        {/* Back to Home Link */}
+        <Link href="/" className="mb-6 flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span className="font-medium">Back to Home</span>
+        </Link>
 
-        {error && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
-            <p className="text-sm text-red-700">{error}</p>
+        <Card className="shadow-md">
+          <div className="mb-8">
+            <h1 className="mb-2 text-3xl font-semibold text-heading">Login</h1>
+            <p className="text-gray-600">Sign in to your account</p>
           </div>
-        )}
+
+          {error && (
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+              <div className="flex items-start gap-3">
+                <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            </div>
+          )}
 
         <form onSubmit={handleLogin} className="space-y-4">
           <Input
@@ -95,6 +109,7 @@ export default function LoginPage() {
           </p>
         </div>
       </Card>
+      </div>
     </div>
   );
 }

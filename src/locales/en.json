@@ -8,12 +8,12 @@
     "sign_up_link": "Sign up"
   },
   "BaseTemplate": {
-    "description": "Starter code for your Nextjs Boilerplate with Tailwind CSS",
-    "made_with": "Made with <author></author>."
+    "description": "A modern content management platform built with Next.js and Tailwind CSS",
+    "made_with": "Built with ❤️"
   },
   "Index": {
-    "meta_title": "Next.js Boilerplate Presentation",
-    "meta_description": "Next js Boilerplate is the perfect starter code for your project. Build your React application with the Next.js framework.",
+    "meta_title": "Content Platform - Share Your Stories",
+    "meta_description": "A powerful yet simple platform to create, manage, and share your content. Write in Markdown, publish instantly.",
     "sponsors_title": "Sponsors"
   },
   "Counter": {

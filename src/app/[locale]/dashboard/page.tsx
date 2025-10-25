@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Footer } from '@/components/layout/Footer';
@@ -21,11 +21,29 @@ type Post = {
 };
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
   const { user, loading: authLoading } = useAuth();
-  const router = useRouter();
   const supabase = createClient();
+
+  const postsPerPage = 6; // 2x3 grid
+  const page = Number(searchParams.get('page')) || 1;
+
+  // Update URL params
+  const updatePage = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', String(newPage));
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  // Scroll to top when page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [page]);
 
   useEffect(() => {
     if (authLoading) {
@@ -38,17 +56,24 @@ export default function DashboardPage() {
     }
 
     const fetchPosts = async () => {
+      setLoading(true);
       try {
-        const { data, error } = await supabase
+        // Calculate range for pagination
+        const from = (page - 1) * postsPerPage;
+        const to = from + postsPerPage - 1;
+
+        const { data, error, count } = await supabase
           .from('posts')
-          .select('*')
+          .select('*', { count: 'exact' })
           .eq('author_id', user.id)
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .range(from, to);
 
         if (error) {
           throw error;
         }
         setPosts(data || []);
+        setTotalCount(count || 0);
       } catch (err) {
         console.error('Error fetching posts:', err);
       } finally {
@@ -57,7 +82,7 @@ export default function DashboardPage() {
     };
 
     fetchPosts();
-  }, [user, authLoading, router, supabase]);
+  }, [user, authLoading, router, supabase, page, postsPerPage]);
 
   const handleDelete = async (postId: string) => {
     if (!confirm('Are you sure you want to delete this post?')) {
@@ -138,7 +163,14 @@ export default function DashboardPage() {
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-heading mb-2 text-4xl font-semibold">My Posts</h1>
-              <p className="text-gray-600">Manage and organize your blog posts</p>
+              <p className="text-gray-600">
+                Manage and organize your blog posts
+                {!loading && totalCount > 0 && (
+                  <span className="ml-2 font-semibold text-gray-700">
+                    ({totalCount} {totalCount === 1 ? 'post' : 'posts'})
+                  </span>
+                )}
+              </p>
             </div>
             <Link href="/dashboard/new">
               <Button variant="primary" size="lg" className='flex items-center justify-center gap-2'>
@@ -153,15 +185,22 @@ export default function DashboardPage() {
           {posts.length === 0
             ? (
                 <Card className="py-12 text-center">
-                  <p className="mb-4 text-gray-600">You haven't created any posts yet.</p>
-                  <Link href="/dashboard/new">
-                    <Button variant="primary">Create Your First Post</Button>
-                  </Link>
+                  <p className="mb-4 text-gray-600">
+                    {totalCount === 0
+                      ? "You haven't created any posts yet."
+                      : "No posts found on this page."}
+                  </p>
+                  {totalCount === 0 && (
+                    <Link href="/dashboard/new">
+                      <Button variant="primary">Create Your First Post</Button>
+                    </Link>
+                  )}
                 </Card>
               )
             : (
-                <div className="grid gap-6 md:grid-cols-2">
-                  {posts.map(post => (
+                <>
+                  <div className="mb-8 grid gap-6 md:grid-cols-2">
+                    {posts.map(post => (
                     <Card
                       key={post.id}
                       variant="elevated"
@@ -290,7 +329,68 @@ export default function DashboardPage() {
                     </Card>
                   ))}
                 </div>
-              )}
+
+                {/* Pagination */}
+                {Math.ceil(totalCount / postsPerPage) > 1 && (
+                  <div className="flex items-center justify-center gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => updatePage(Math.max(1, page - 1))}
+                      disabled={page === 1}
+                      className="flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                      Previous
+                    </Button>
+
+                    <div className="flex items-center gap-2">
+                      {Array.from({ length: Math.ceil(totalCount / postsPerPage) }, (_, i) => i + 1).map((pageNum) => {
+                        const totalPages = Math.ceil(totalCount / postsPerPage);
+                        // Show first page, last page, current page, and pages around current
+                        if (
+                          pageNum === 1
+                          || pageNum === totalPages
+                          || (pageNum >= page - 1 && pageNum <= page + 1)
+                        ) {
+                          return (
+                            <button
+                              key={pageNum}
+                              onClick={() => updatePage(pageNum)}
+                              className={`flex h-10 w-10 items-center justify-center rounded-lg font-medium transition-all duration-200 ${
+                                pageNum === page
+                                  ? 'bg-blue-600 text-white shadow-md'
+                                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                              }`}
+                            >
+                              {pageNum}
+                            </button>
+                          );
+                        }
+                        // Show ellipsis
+                        if (pageNum === page - 2 || pageNum === page + 2) {
+                          return <span key={pageNum} className="text-gray-400">...</span>;
+                        }
+                        return null;
+                      })}
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      onClick={() => updatePage(Math.min(Math.ceil(totalCount / postsPerPage), page + 1))}
+                      disabled={page === Math.ceil(totalCount / postsPerPage)}
+                      className="flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Next
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
         </div>
       </main>
 
