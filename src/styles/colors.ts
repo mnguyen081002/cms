@@ -121,35 +121,4 @@ export const COLORS = {
   },
 } as const;
 
-/**
- * Tailwind CSS Color Mapping
- * Ánh xạ các màu sang Tailwind CSS classes
- */
-export const TAILWIND_COLORS = {
-  primary: COLORS.primary.blue,
-  secondary: COLORS.secondary.light,
-  success: COLORS.status.success,
-  error: COLORS.status.error,
-  warning: COLORS.status.warning,
-  info: COLORS.status.info,
-} as const;
 
-/**
- * Helper function để lấy màu
- */
-export function getColor(path: string): string {
-  const keys = path.split('.');
-  let value: any = COLORS;
-
-  for (const key of keys) {
-    value = value?.[key];
-  }
-
-  return value || '#000000';
-}
-
-/**
- * Type-safe color keys
- */
-export type ColorKey = keyof typeof COLORS;
-export type ColorValue = typeof COLORS[ColorKey];

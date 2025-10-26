@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
@@ -21,7 +21,7 @@ type Post = {
   published: boolean;
 };
 
-export default function PostsPage() {
+function PostsPageContent() {
   const t = useTranslations('Posts');
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -348,5 +348,21 @@ export default function PostsPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function PostsPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen flex-col bg-white">
+        <Header />
+        <main className="flex flex-1 items-center justify-center">
+          <p className="text-gray-600">Loading...</p>
+        </main>
+        <Footer />
+      </div>
+    }>
+      <PostsPageContent />
+    </Suspense>
   );
 }

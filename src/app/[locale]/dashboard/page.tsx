@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
@@ -21,8 +21,9 @@ type Post = {
   updated_at: string;
 };
 
-export default function DashboardPage() {
+function DashboardPageContent() {
   const t = useTranslations('MyDashboard');
+  const tPosts = useTranslations('Posts');
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -137,7 +138,6 @@ export default function DashboardPage() {
     const past = new Date(date);
     const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
 
-    const tPosts = useTranslations('Posts');
     if (diffInSeconds < 60) return tPosts('just_now');
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}${tPosts('minutes_ago')}`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}${tPosts('hours_ago')}`;
@@ -399,5 +399,21 @@ export default function DashboardPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen flex-col bg-white">
+        <Header />
+        <main className="flex flex-1 items-center justify-center">
+          <p className="text-gray-600">Loading...</p>
+        </main>
+        <Footer />
+      </div>
+    }>
+      <DashboardPageContent />
+    </Suspense>
   );
 }

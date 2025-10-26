@@ -19,7 +19,7 @@ type Post = {
   author_id: string;
 };
 
-export default function EditPostPage({ params }: { params: { id: string }  }) {
+export default function EditPostPage({ params }: { params: Promise<{ id: string }>  }) {
   const { id } = params as unknown as { id: string };
   const [post, setPost] = useState<Post | null>(null);
   const [title, setTitle] = useState('');

@@ -6,7 +6,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.
 
 const supabaseServer = createClient(supabaseUrl, supabaseServiceKey);
 
-export type Post = {
+type Post = {
   id: string;
   title: string;
   content: string;

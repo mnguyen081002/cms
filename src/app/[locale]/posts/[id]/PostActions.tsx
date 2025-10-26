@@ -10,10 +10,9 @@ import { createClient } from '@/lib/supabase/client';
 type PostActionsProps = {
   postId: string;
   authorId: string;
-  locale: string;
 };
 
-export function PostActions({ postId, authorId, locale }: PostActionsProps) {
+export function PostActions({ postId, authorId }: PostActionsProps) {
   const { user } = useAuth();
   const router = useRouter();
   const t = useTranslations('PostDetail');
