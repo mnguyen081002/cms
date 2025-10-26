@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/lib/auth/context';
-import { createClient } from '@/lib/supabase/client';
+import { deletePost } from './actions';
 
 type PostActionsProps = {
   postId: string;
@@ -16,7 +17,7 @@ export function PostActions({ postId, authorId }: PostActionsProps) {
   const { user } = useAuth();
   const router = useRouter();
   const t = useTranslations('PostDetail');
-  const supabase = createClient();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const isAuthor = user?.id === authorId;
 
@@ -25,19 +26,21 @@ export function PostActions({ postId, authorId }: PostActionsProps) {
       return;
     }
 
-    try {
-      const { error: deleteError } = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', postId);
+    setIsDeleting(true);
 
-      if (deleteError) {
-        throw deleteError;
+    try {
+      const result = await deletePost(postId);
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to delete post');
       }
+
       router.push('/dashboard');
+      router.refresh(); // Refresh to update the UI
     } catch (err) {
-      console.error('Error deleting post:', err);
+      console.error('[PostActions] Delete error:', err);
       alert(t('delete_failed'));
+      setIsDeleting(false);
     }
   };
 
@@ -50,8 +53,13 @@ export function PostActions({ postId, authorId }: PostActionsProps) {
       <Link href={`/dashboard/${postId}/edit`}>
         <Button variant="primary">{t('edit_post')}</Button>
       </Link>
-      <Button variant="outline" onClick={handleDelete} className="border-red-600 text-red-600 hover:bg-red-50">
-        {t('delete_post')}
+      <Button
+        variant="outline"
+        onClick={handleDelete}
+        disabled={isDeleting}
+        className="border-red-600 text-red-600 hover:bg-red-50 disabled:opacity-50"
+      >
+        {isDeleting ? 'Deleting...' : t('delete_post')}
       </Button>
     </div>
   );

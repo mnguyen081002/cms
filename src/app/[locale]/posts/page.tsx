@@ -1,25 +1,18 @@
 'use client';
 
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
+import { EmptyState } from '@/components/posts/EmptyState';
+import { LoadingSpinner } from '@/components/posts/LoadingSpinner';
+import { Pagination } from '@/components/posts/Pagination';
+import { PostCard } from '@/components/posts/PostCard';
+import { SearchBar } from '@/components/posts/SearchBar';
 import { createClient } from '@/lib/supabase/client';
-
-type Post = {
-  id: string;
-  title: string;
-  content: string;
-  author_id: string;
-  created_at: string;
-  published: boolean;
-};
+import type { Post } from '@/types/post';
+import { getTimeAgo } from '@/utils/date';
 
 function PostsPageContent() {
   const t = useTranslations('Posts');
@@ -104,36 +97,13 @@ function PostsPageContent() {
 
   const totalPages = Math.ceil(totalCount / postsPerPage);
 
-  const getContentPreview = (content: string, maxLength = 200) => {
-    if (content.length <= maxLength) {
-      return content;
-    }
-    const trimmed = content.substring(0, maxLength);
-    const lastSpace = trimmed.lastIndexOf(' ');
-    if (lastSpace > 0) {
-      return `${trimmed.substring(0, lastSpace)}...`;
-    }
-    return `${trimmed}...`;
-  };
-
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+  const formatDateWithTimeAgo = (date: string) => {
+    return getTimeAgo(date, {
+      justNow: t('just_now'),
+      minutesAgo: t('minutes_ago'),
+      hoursAgo: t('hours_ago'),
+      daysAgo: t('days_ago'),
     });
-  };
-
-  const getTimeAgo = (date: string) => {
-    const now = new Date();
-    const past = new Date(date);
-    const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
-
-    if (diffInSeconds < 60) return t('just_now');
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}${t('minutes_ago')}`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}${t('hours_ago')}`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}${t('days_ago')}`;
-    return formatDate(date);
   };
 
   return (
@@ -162,187 +132,47 @@ function PostsPageContent() {
                 </div>
               )}
             </div>
-            <div className="relative max-w-xl">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <Input
-                type="text"
-                placeholder={t('search_placeholder')}
-                value={search}
-                onChange={e => updateParams(e.target.value)}
-                className="pl-12"
-              />
-            </div>
+            <SearchBar
+              value={search}
+              onChange={value => updateParams(value)}
+              placeholder={t('search_placeholder')}
+              className="max-w-xl"
+            />
           </div>
 
           {loading
             ? (
-                <div className="flex min-h-[400px] items-center justify-center">
-                  <div className="text-center">
-                    <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
-                    <p className="text-gray-600">{t('loading')}</p>
-                  </div>
-                </div>
+                <LoadingSpinner message={t('loading')} />
               ) : posts.length === 0
                 ? (
-                    <Card className="py-16 text-center">
-                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-                        <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-heading mb-2 text-xl font-semibold">
-                        {search ? t('no_posts_found') : t('no_posts_yet')}
-                      </h3>
-                      <p className="mb-6 text-gray-600">
-                        {search
-                          ? t('no_posts_search')
-                          : t('no_posts_create')}
-                      </p>
-                      {search && (
-                        <Button variant="outline" onClick={() => updateParams('')}>
-                          {t('clear_search')}
-                        </Button>
-                      )}
-                    </Card>
+                    <EmptyState
+                      title={search ? t('no_posts_found') : t('no_posts_yet')}
+                      description={search ? t('no_posts_search') : t('no_posts_create')}
+                      actionLabel={search ? t('clear_search') : undefined}
+                      onAction={search ? () => updateParams('') : undefined}
+                      icon={search ? 'search' : 'document'}
+                    />
                   ) : (
                     <>
                       <div className="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {posts.map(post => (
-                          <Link key={post.id} href={`/posts/${post.id}`}>
-                            <Card
-                              variant="elevated"
-                              className="group flex h-full cursor-pointer flex-col transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
-                            >
-                              {/* Title */}
-                              <h2 className="text-heading hover:text-accent mb-3 text-xl font-bold transition-colors duration-200 line-clamp-2">
-                                {post.title}
-                              </h2>
-
-                              {/* Content Preview with Markdown */}
-                              {post.content && (
-                                <div className="relative mb-4 flex-1 max-h-[4.5rem] overflow-hidden">
-                                  <div className="prose prose-sm max-w-none">
-                                    <ReactMarkdown
-                                      components={{
-                                        h1: ({ node, ...props }) => (
-                                          <h1 className="text-heading mb-1 text-sm font-semibold" {...props} />
-                                        ),
-                                        h2: ({ node, ...props }) => (
-                                          <h2 className="text-heading mb-1 text-sm font-semibold" {...props} />
-                                        ),
-                                        h3: ({ node, ...props }) => (
-                                          <h3 className="text-heading mb-1 text-xs font-semibold" {...props} />
-                                        ),
-                                        p: ({ node, ...props }) => (
-                                          <p className="mb-1 text-sm leading-relaxed text-gray-600" {...props} />
-                                        ),
-                                        ul: ({ node, ...props }) => (
-                                          <ul className="mb-1 ml-4 list-disc text-sm text-gray-600" {...props} />
-                                        ),
-                                        ol: ({ node, ...props }) => (
-                                          <ol className="mb-1 ml-4 list-decimal text-sm text-gray-600" {...props} />
-                                        ),
-                                        li: ({ node, ...props }) => (
-                                          <li className="text-sm" {...props} />
-                                        ),
-                                        code: ({ node, ...props }) => (
-                                          <code className="rounded bg-gray-100 px-1 py-0.5 font-mono text-xs text-gray-800" {...props} />
-                                        ),
-                                        blockquote: ({ node, ...props }) => (
-                                          <blockquote className="border-accent mb-1 border-l-2 pl-2 text-sm text-gray-600 italic" {...props} />
-                                        ),
-                                        strong: ({ node, ...props }) => (
-                                          <strong className="font-semibold text-gray-800" {...props} />
-                                        ),
-                                        em: ({ node, ...props }) => (
-                                          <em className="italic" {...props} />
-                                        ),
-                                      }}
-                                    >
-                                      {getContentPreview(post.content, 200)}
-                                    </ReactMarkdown>
-                                  </div>
-                                  {/* Gradient overlay */}
-                                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent" />
-                                </div>
-                              )}
-
-                              {/* Meta Information */}
-                              <div className="mt-auto border-t border-gray-100 pt-4">
-                                <div className="flex items-center gap-2 text-xs text-gray-500">
-                                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                  </svg>
-                                  <span>{getTimeAgo(post.created_at)}</span>
-                                </div>
-                              </div>
-                            </Card>
-                          </Link>
+                          <PostCard
+                            key={post.id}
+                            post={post}
+                            formatDate={formatDateWithTimeAgo}
+                            variant="public"
+                          />
                         ))}
                       </div>
 
                       {/* Pagination */}
-                      {totalPages > 1 && (
-                        <div className="flex items-center justify-center gap-3">
-                          <Button
-                            variant="outline"
-                            onClick={() => updateParams(undefined, Math.max(1, page - 1))}
-                            disabled={page === 1}
-                            className="flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            {t('previous')}
-                          </Button>
-
-                          <div className="flex items-center gap-2">
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
-                              // Show first page, last page, current page, and pages around current
-                              if (
-                                pageNum === 1
-                                || pageNum === totalPages
-                                || (pageNum >= page - 1 && pageNum <= page + 1)
-                              ) {
-                                return (
-                                  <button
-                                    key={pageNum}
-                                    onClick={() => updateParams(undefined, pageNum)}
-                                    className={`flex h-10 w-10 items-center justify-center rounded-lg font-medium transition-all duration-200 ${
-                                      pageNum === page
-                                        ? 'bg-blue-600 text-white shadow-md'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                                    }`}
-                                  >
-                                    {pageNum}
-                                  </button>
-                                );
-                              }
-                              // Show ellipsis
-                              if (pageNum === page - 2 || pageNum === page + 2) {
-                                return <span key={pageNum} className="text-gray-400">...</span>;
-                              }
-                              return null;
-                            })}
-                          </div>
-
-                          <Button
-                            variant="outline"
-                            onClick={() => updateParams(undefined, Math.min(totalPages, page + 1))}
-                            disabled={page === totalPages}
-                            className="flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            {t('next')}
-                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </Button>
-                        </div>
-                      )}
+                      <Pagination
+                        currentPage={page}
+                        totalPages={totalPages}
+                        onPageChange={pageNum => updateParams(undefined, pageNum)}
+                        previousLabel={t('previous')}
+                        nextLabel={t('next')}
+                      />
                     </>
                   )}
         </div>

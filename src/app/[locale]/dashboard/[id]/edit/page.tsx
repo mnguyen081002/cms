@@ -4,20 +4,16 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
+import { LoadingSpinner } from '@/components/posts/LoadingSpinner';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { ErrorAlert } from '@/components/ui/ErrorAlert';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useAuth } from '@/lib/auth/context';
 import { createClient } from '@/lib/supabase/client';
-
-type Post = {
-  id: string;
-  title: string;
-  content: string;
-  published: boolean;
-  author_id: string;
-};
+import type { Post } from '@/types/post';
+import { validateAll, validatePostContent, validatePostTitle } from '@/utils/validation';
 
 export default function EditPostPage({ params }: { params: Promise<{ id: string }>  }) {
   const { id } = params as unknown as { id: string };
@@ -71,13 +67,14 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     e.preventDefault();
     setError('');
 
-    if (!title.trim()) {
-      setError('Title is required');
-      return;
-    }
+    // Validate form
+    const validationError = validateAll([
+      validatePostTitle(title),
+      validatePostContent(content),
+    ]);
 
-    if (!content.trim()) {
-      setError('Content is required');
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -109,8 +106,8 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     return (
       <div className="flex min-h-screen flex-col bg-white">
         <Header />
-        <main className="flex flex-1 items-center justify-center">
-          <p className="text-gray-600">Loading...</p>
+        <main className="flex-1 bg-gray-50">
+          <LoadingSpinner message="Loading..." />
         </main>
         <Footer />
       </div>
@@ -123,7 +120,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
         <Header />
         <main className="flex flex-1 items-center justify-center">
           <Card className="text-center">
-            <p className="mb-4 text-red-600">{error}</p>
+            <ErrorAlert error={error} className="mb-4" />
             <Button variant="primary" onClick={() => router.push('/dashboard')}>
               Back to Dashboard
             </Button>
@@ -143,11 +140,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
           <h1 className="text-heading mb-8 text-4xl font-semibold">Edit Post</h1>
 
           <Card>
-            {error && (
-              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            )}
+            <ErrorAlert error={error} className="mb-4" />
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <Input

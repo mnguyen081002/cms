@@ -7,8 +7,10 @@ import { useState } from 'react';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { ErrorAlert } from '@/components/ui/ErrorAlert';
 import { Input } from '@/components/ui/Input';
 import { createClient } from '@/lib/supabase/client';
+import { validateAll, validateEmail, validateRequired } from '@/utils/validation';
 
 export default function LoginPage() {
   const t = useTranslations('Auth');
@@ -22,6 +24,18 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Validate form
+    const validationError = validateAll([
+      validateEmail(email),
+      validateRequired(password, 'Password'),
+    ]);
+
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -63,16 +77,7 @@ export default function LoginPage() {
             <p className="text-gray-600">{t('login_subtitle')}</p>
           </div>
 
-          {error && (
-            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
-              <div className="flex items-start gap-3">
-                <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            </div>
-          )}
+          <ErrorAlert error={error} className="mb-4" />
 
         <form onSubmit={handleLogin} className="space-y-4">
           <Input

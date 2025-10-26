@@ -6,8 +6,10 @@ import { useState } from 'react';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { ErrorAlert } from '@/components/ui/ErrorAlert';
 import { Input } from '@/components/ui/Input';
 import { createClient } from '@/lib/supabase/client';
+import { validateAll, validateEmail, validatePassword, validatePasswordMatch } from '@/utils/validation';
 
 export default function RegisterPage() {
   const t = useTranslations('Auth');
@@ -23,13 +25,15 @@ export default function RegisterPage() {
     e.preventDefault();
     setError('');
 
-    if (password !== confirmPassword) {
-      setError(t('error_password_mismatch'));
-      return;
-    }
+    // Validate form
+    const validationError = validateAll([
+      validateEmail(email),
+      validatePassword(password, 6),
+      validatePasswordMatch(password, confirmPassword),
+    ]);
 
-    if (password.length < 6) {
-      setError(t('error_password_length'));
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -158,16 +162,7 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {error && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
-            <div className="flex items-start gap-3">
-              <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-sm text-red-700">{error}</p>
-            </div>
-          </div>
-        )}
+        <ErrorAlert error={error} className="mb-4" />
 
         <form onSubmit={handleRegister} className="space-y-4">
           <Input

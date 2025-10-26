@@ -4,12 +4,15 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
+import { LoadingSpinner } from '@/components/posts/LoadingSpinner';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { ErrorAlert } from '@/components/ui/ErrorAlert';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useAuth } from '@/lib/auth/context';
 import { createClient } from '@/lib/supabase/client';
+import { validateAll, validatePostContent, validatePostTitle } from '@/utils/validation';
 
 export default function NewPostPage() {
   const [title, setTitle] = useState('');
@@ -33,13 +36,14 @@ export default function NewPostPage() {
     e.preventDefault();
     setError('');
 
-    if (!title.trim()) {
-      setError('Title is required');
-      return;
-    }
+    // Validate form
+    const validationError = validateAll([
+      validatePostTitle(title),
+      validatePostContent(content),
+    ]);
 
-    if (!content.trim()) {
-      setError('Content is required');
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -73,8 +77,8 @@ export default function NewPostPage() {
     return (
       <div className="flex min-h-screen flex-col bg-white">
         <Header />
-        <main className="flex flex-1 items-center justify-center">
-          <p className="text-gray-600">Loading...</p>
+        <main className="flex-1 bg-gray-50">
+          <LoadingSpinner message="Loading..." />
         </main>
         <Footer />
       </div>
@@ -90,11 +94,7 @@ export default function NewPostPage() {
           <h1 className="mb-8 text-4xl font-semibold text-heading">Create New Post</h1>
 
           <Card>
-            {error && (
-              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            )}
+            <ErrorAlert error={error} className="mb-4" />
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <Input

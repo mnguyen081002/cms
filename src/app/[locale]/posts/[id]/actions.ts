@@ -1,41 +1,94 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
-type Post = {
-  id: string;
-  title: string;
-  content: string;
-  author_id: string;
-  created_at: string;
-  updated_at: string;
-  published: boolean;
-};
+/**
+ * Server Actions for Post Detail Page
+ *
+ * These actions are called from the client-side components
+ * and run on the server with user authentication context.
+ */
 
 /**
- * Get post by ID with RLS (uses user session from cookies)
- * - Public users can only see published posts
- * - Authenticated users can see their own drafts
+ * Delete a post (only author can delete)
+ *
+ * @param postId - Post ID to delete
+ * @returns Success status and error message if any
  */
-export async function getPost(id: string): Promise<Post | null> {
+export async function deletePost(postId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const supabase = await createServerSupabaseClient();
 
-    const { data, error } = await supabase
-      .from('posts')
-      .select('*')
-      .eq('id', id)
-      .single();
+    // Get current user
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    if (error) {
-      console.error('Error fetching post:', error);
-      return null;
+    if (!user) {
+      return { success: false, error: 'Unauthorized' };
     }
 
-    return data;
+    // RLS will automatically check if user is the author
+    const { error } = await supabase.from('posts').delete().eq('id', postId);
+
+    if (error) {
+      console.error('[deletePost] Error:', error);
+      return { success: false, error: error.message };
+    }
+
+    // Revalidate paths
+    revalidatePath('/dashboard');
+    revalidatePath('/posts');
+    revalidatePath(`/posts/${postId}`);
+
+    return { success: true };
   } catch (err) {
-    console.error('Error in getPost:', err);
-    return null;
+    console.error('[deletePost] Exception:', err);
+    return { success: false, error: 'Failed to delete post' };
+  }
+}
+
+/**
+ * Toggle post published status (only author can toggle)
+ *
+ * @param postId - Post ID
+ * @param published - New published status
+ * @returns Success status and error message if any
+ */
+export async function togglePublished(
+  postId: string,
+  published: boolean,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const supabase = await createServerSupabaseClient();
+
+    // Get current user
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    // RLS will automatically check if user is the author
+    const { error } = await supabase.from('posts').update({ published }).eq('id', postId);
+
+    if (error) {
+      console.error('[togglePublished] Error:', error);
+      return { success: false, error: error.message };
+    }
+
+    // Revalidate paths
+    revalidatePath('/dashboard');
+    revalidatePath('/posts');
+    revalidatePath(`/posts/${postId}`);
+
+    return { success: true };
+  } catch (err) {
+    console.error('[togglePublished] Exception:', err);
+    return { success: false, error: 'Failed to update post' };
   }
 }
 

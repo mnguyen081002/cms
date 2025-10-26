@@ -1,10 +1,11 @@
 import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 import { createServerClient } from '@supabase/ssr';
 
 /**
  * Create Supabase client for Server Components and Server Actions
  * This function creates a new client for each request with the user's session from cookies
- * 
+ *
  * Usage:
  * ```ts
  * const supabase = await createServerSupabaseClient();
@@ -35,6 +36,25 @@ export async function createServerSupabaseClient() {
         },
       },
     },
+  );
+}
+
+/**
+ * Create Supabase client for static generation (no cookies)
+ * Use this for generateStaticParams, sitemap, etc.
+ *
+ * Note: This client has no user session, so RLS will only allow public data
+ *
+ * Usage:
+ * ```ts
+ * const supabase = createStaticSupabaseClient();
+ * const { data } = await supabase.from('posts').select('*');
+ * ```
+ */
+export function createStaticSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 }
 

@@ -7,9 +7,9 @@ import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { generateExcerpt, getPostIds } from '@/lib/posts/server';
+import { generateExcerpt, getPostById, getPostIds } from '@/lib/posts/server';
+import { formatDate } from '@/utils/date';
 import { getBaseUrl } from '@/utils/Helpers';
-import { getPost } from './actions';
 import { PostActions } from './PostActions';
 
 type PostPageProps = {
@@ -39,7 +39,7 @@ export async function generateStaticParams() {
 // Generate dynamic metadata for SEO
 export async function generateMetadata(props: PostPageProps): Promise<Metadata> {
   const { locale, id } = await props.params;
-  const post = await getPost(id);
+  const post = await getPostById(id);
 
   if (!post) {
     return {
@@ -81,20 +81,12 @@ export default async function PostDetailPage(props: PostPageProps) {
   const { locale, id } = await props.params;
   setRequestLocale(locale);
 
-  const post = await getPost(id);
+  const post = await getPostById(id);
   const t = await getTranslations({ locale, namespace: 'PostDetail' });
 
   if (!post) {
     notFound();
   }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
 
   // JSON-LD Structured Data for SEO
   const jsonLd = {
@@ -143,7 +135,7 @@ export default async function PostDetailPage(props: PostPageProps) {
               </div>
               <div className="mb-6 flex items-center justify-between text-gray-600">
                 <time dateTime={post.created_at} className="text-sm">
-                  {formatDate(post.created_at)}
+                  {formatDate(post.created_at, locale === 'vi' ? 'vi-VN' : 'en-US')}
                 </time>
               </div>
             </header>
