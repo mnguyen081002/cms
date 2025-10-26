@@ -1,7 +1,7 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 
-import { LocaleSwitcher } from '@/components/LocaleSwitcher';
+import { Header } from '@/components/layout/Header';
 import { AppConfig } from '@/utils/AppConfig';
 
 export default async function Layout(props: {
@@ -10,50 +10,11 @@ export default async function Layout(props: {
 }) {
   const { locale } = await props.params;
   setRequestLocale(locale);
-  const t = await getTranslations({
-    locale,
-    namespace: 'RootLayout',
-  });
 
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
-              <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-            </div>
-            <span className="text-xl font-bold text-gray-900">{AppConfig.name}</span>
-          </Link>
-
-          {/* Navigation */}
-          <div className="flex items-center gap-6">
-            <Link
-              href="/posts"
-              className="text-gray-600 transition-colors hover:text-gray-900"
-            >
-              {t('browse_posts')}
-            </Link>
-            <LocaleSwitcher />
-            <Link
-              href="/auth/login"
-              className="text-gray-600 transition-colors hover:text-gray-900"
-            >
-              {t('sign_in_link')}
-            </Link>
-            <Link
-              href="/auth/register"
-              className="rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2.5 font-semibold text-white transition-all hover:shadow-lg"
-            >
-              {t('get_started')}
-            </Link>
-          </div>
-        </nav>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="flex-1">
