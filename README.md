@@ -12,7 +12,6 @@ A modern, full-stack content management system built with Next.js 15, TypeScript
 - 📊 **PostgreSQL Database** with Supabase
 - 🔒 **Row-Level Security** (RLS) for data protection
 - ✅ **Type Safety** with TypeScript & Zod validation
-- 🧪 **Testing** with Vitest & Playwright
 - 📦 **Code Quality** with ESLint & TypeScript
 - 🎯 **SEO Optimized** with metadata & sitemaps
 
