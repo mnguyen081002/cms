@@ -97,15 +97,19 @@ export function PostCard({
 
         {/* Action Buttons */}
         <div className="flex gap-2 border-t border-gray-100 pt-4">
-          <Link href={`/posts/${post.id}`} className="flex-1">
-            <button className="group/btn flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700">
-              <svg className="h-4 w-4 transition-transform group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-              <span>{viewLabel}</span>
-            </button>
-          </Link>
+          {/* View button - Only shown for published posts */}
+          {post.published && (
+            <Link href={`/posts/${post.id}`} className="flex-1">
+              <button className="group/btn flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700">
+                <svg className="h-4 w-4 transition-transform group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span>{viewLabel}</span>
+              </button>
+            </Link>
+          )}
+          {/* Edit button - Always shown */}
           <Link href={`/dashboard/${post.id}/edit`} className="flex-1">
             <button className="group/btn flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-green-300 hover:bg-green-50 hover:text-green-700">
               <svg className="h-4 w-4 transition-transform group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,6 +118,7 @@ export function PostCard({
               <span>{editLabel}</span>
             </button>
           </Link>
+          {/* Delete button - Always shown */}
           <button
             onClick={handleDelete}
             className="group/btn flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-medium text-red-600 transition-all duration-200 hover:border-red-400 hover:bg-red-50 hover:text-red-700"

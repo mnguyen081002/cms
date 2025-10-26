@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createStaticSupabaseClient } from '@/lib/supabase/server';
+import {  createStaticSupabaseClient } from '@/lib/supabase/server';
 import type { Post } from '@/types/post';
 
 /**
@@ -27,7 +27,7 @@ import type { Post } from '@/types/post';
  */
 export async function getPostById(id: string): Promise<Post | null> {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createStaticSupabaseClient();
 
     const { data, error } = await supabase
       .from('posts')
