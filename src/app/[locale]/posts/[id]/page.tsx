@@ -7,7 +7,7 @@ import { Header } from '@/components/layout/Header';
 import { MarkdownRenderer } from '@/components/posts/MarkdownRenderer';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { generateExcerpt, getPostById, getPostIds } from '@/lib/posts/server';
+import { generateExcerpt, getPostById } from '@/lib/posts/server';
 import { formatDate } from '@/utils/date';
 import { getBaseUrl } from '@/utils/Helpers';
 import { PostActions } from './PostActions';
@@ -20,17 +20,17 @@ export const revalidate = 60;
 
 export const dynamicParams = true;
 
-export async function generateStaticParams() {
-  const postIds = await getPostIds();
+// export async function generateStaticParams() {
+//   const postIds = await getPostIds();
 
-  const params = [];
-  for (const id of postIds) {
-    params.push({ locale: 'en', id });
-    params.push({ locale: 'vi', id });
-  }
+//   const params = [];
+//   for (const id of postIds) {
+//     params.push({ locale: 'en', id });
+//     params.push({ locale: 'vi', id });
+//   }
 
-  return params;
-}
+//   return params;
+// }
 
 export async function generateMetadata(props: PostPageProps): Promise<Metadata> {
   const { locale, id } = await props.params;
