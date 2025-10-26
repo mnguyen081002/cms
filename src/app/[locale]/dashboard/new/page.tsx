@@ -3,10 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import ReactMarkdown from 'react-markdown';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { LoadingSpinner } from '@/components/posts/LoadingSpinner';
+import { MarkdownRenderer } from '@/components/posts/MarkdownRenderer';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { ErrorAlert } from '@/components/ui/ErrorAlert';
@@ -16,6 +16,8 @@ import { Textarea } from '@/components/ui/Textarea';
 import { useAuth } from '@/lib/auth/context';
 import { createClient } from '@/lib/supabase/client';
 import { validateAll, validatePostContent, validatePostTitle } from '@/utils/validation';
+import { revalidate } from '../../posts/[id]/page';
+import { revalidatePath } from 'next/cache';
 
 export default function NewPostPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
@@ -140,61 +142,12 @@ export default function NewPostPage({ params }: { params: Promise<{ locale: stri
 
               {/* Preview Tab */}
               {activeTab === 'preview' && (
-                <div>
-                  <div className="prose prose-slate max-w-none rounded-lg border border-gray-200 bg-gray-50 p-6">
-                    {content.trim() ? (
-                      <ReactMarkdown
-                        components={{
-                          h1: ({ node, ...props }) => (
-                            <h1 className="text-heading mb-4 text-3xl font-bold" {...props} />
-                          ),
-                          h2: ({ node, ...props }) => (
-                            <h2 className="text-heading mb-3 mt-6 text-2xl font-semibold" {...props} />
-                          ),
-                          h3: ({ node, ...props }) => (
-                            <h3 className="text-heading mb-2 mt-4 text-xl font-semibold" {...props} />
-                          ),
-                          p: ({ node, ...props }) => (
-                            <p className="text-body mb-4 leading-relaxed" {...props} />
-                          ),
-                          ul: ({ node, ...props }) => (
-                            <ul className="mb-4 ml-6 list-disc space-y-2 text-gray-700" {...props} />
-                          ),
-                          ol: ({ node, ...props }) => (
-                            <ol className="mb-4 ml-6 list-decimal space-y-2 text-gray-700" {...props} />
-                          ),
-                          li: ({ node, ...props }) => (
-                            <li className="leading-relaxed" {...props} />
-                          ),
-                          code: ({ node, ...props }) => (
-                            <code className="rounded bg-gray-200 px-2 py-1 font-mono text-sm text-gray-800" {...props} />
-                          ),
-                          pre: ({ node, ...props }) => (
-                            <pre className="mb-4 overflow-x-auto rounded-lg bg-gray-800 p-4 text-gray-100" {...props} />
-                          ),
-                          blockquote: ({ node, ...props }) => (
-                            <blockquote className="border-accent mb-4 border-l-4 pl-4 italic text-gray-600" {...props} />
-                          ),
-                          a: ({ node, ...props }) => (
-                            <a className="text-accent hover:underline" {...props} />
-                          ),
-                          strong: ({ node, ...props }) => (
-                            <strong className="font-bold text-gray-900" {...props} />
-                          ),
-                          em: ({ node, ...props }) => (
-                            <em className="italic" {...props} />
-                          ),
-                          hr: ({ node, ...props }) => (
-                            <hr className="my-6 border-gray-300" {...props} />
-                          ),
-                        }}
-                      >
-                        {content}
-                      </ReactMarkdown>
-                    ) : (
-                      <p className="text-gray-400 italic">{t('preview_empty')}</p>
-                    )}
-                  </div>
+                <div className="rounded-lg border border-gray-200 bg-gray-50 p-6">
+                  {content.trim() ? (
+                    <MarkdownRenderer content={content} />
+                  ) : (
+                    <p className="text-gray-400 italic">{t('preview_empty')}</p>
+                  )}
                 </div>
               )}
 

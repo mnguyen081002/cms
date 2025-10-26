@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import ReactMarkdown from 'react-markdown';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
+import { MarkdownRenderer } from '@/components/posts/MarkdownRenderer';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { generateExcerpt, getPostById, getPostIds } from '@/lib/posts/server';
@@ -140,43 +140,8 @@ export default async function PostDetailPage(props: PostPageProps) {
               </div>
             </header>
 
-            <Card className="prose prose-sm mb-8 max-w-none">
-              <ReactMarkdown
-                components={{
-                  h1: ({ node, ...props }) => (
-                    <h1 className="text-heading mb-4 mt-6 text-3xl font-semibold" {...props} />
-                  ),
-                  h2: ({ node, ...props }) => (
-                    <h2 className="text-heading mb-3 mt-5 text-2xl font-semibold" {...props} />
-                  ),
-                  h3: ({ node, ...props }) => (
-                    <h3 className="text-heading mb-2 mt-4 text-xl font-semibold" {...props} />
-                  ),
-                  p: ({ node, ...props }) => (
-                    <p className="text-body mb-4 leading-relaxed" {...props} />
-                  ),
-                  a: ({ node, ...props }) => (
-                    <a className="text-accent hover:underline" {...props} />
-                  ),
-                  ul: ({ node, ...props }) => (
-                    <ul className="mb-4 ml-6 list-disc" {...props} />
-                  ),
-                  ol: ({ node, ...props }) => (
-                    <ol className="mb-4 ml-6 list-decimal" {...props} />
-                  ),
-                  li: ({ node, ...props }) => (
-                    <li className="mb-2" {...props} />
-                  ),
-                  code: ({ node, ...props }) => (
-                    <code className="rounded bg-gray-100 px-2 py-1 font-mono text-sm" {...props} />
-                  ),
-                  blockquote: ({ node, ...props }) => (
-                    <blockquote className="border-accent my-4 border-l-4 pl-4 text-gray-600 italic" {...props} />
-                  ),
-                }}
-              >
-                {post.content}
-              </ReactMarkdown>
+            <Card className="mb-8">
+              <MarkdownRenderer content={post.content} />
             </Card>
 
             <PostActions postId={post.id} authorId={post.author_id} />
