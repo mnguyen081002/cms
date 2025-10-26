@@ -7,8 +7,9 @@ import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { generateExcerpt, getPost, getPostIds } from '@/lib/posts/server';
+import { generateExcerpt, getPostIds } from '@/lib/posts/server';
 import { getBaseUrl } from '@/utils/Helpers';
+import { getPost } from './actions';
 import { PostActions } from './PostActions';
 
 type PostPageProps = {
@@ -18,17 +19,20 @@ type PostPageProps = {
 // ISR: Revalidate every 60 seconds
 export const revalidate = 60;
 
+// Allow dynamic params (for draft posts not in generateStaticParams)
+export const dynamicParams = true;
+
 // Generate static params for published posts
 export async function generateStaticParams() {
   const postIds = await getPostIds();
-  
+
   // Generate params for both locales
   const params = [];
   for (const id of postIds) {
     params.push({ locale: 'en', id });
     params.push({ locale: 'vi', id });
   }
-  
+
   return params;
 }
 
@@ -76,7 +80,7 @@ export async function generateMetadata(props: PostPageProps): Promise<Metadata> 
 export default async function PostDetailPage(props: PostPageProps) {
   const { locale, id } = await props.params;
   setRequestLocale(locale);
-  
+
   const post = await getPost(id);
   const t = await getTranslations({ locale, namespace: 'PostDetail' });
 
@@ -127,9 +131,16 @@ export default async function PostDetailPage(props: PostPageProps) {
         <main className="flex-1">
           <article className="mx-auto max-w-3xl px-4 py-12">
             <header className="mb-8">
-              <h1 className="text-heading mb-4 text-4xl font-semibold md:text-5xl">
-                {post.title}
-              </h1>
+              <div className="mb-4 flex items-start gap-3">
+                <h1 className="text-heading flex-1 text-4xl font-semibold md:text-5xl">
+                  {post.title}
+                </h1>
+                {!post.published && (
+                  <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-800">
+                    DRAFT
+                  </span>
+                )}
+              </div>
               <div className="mb-6 flex items-center justify-between text-gray-600">
                 <time dateTime={post.created_at} className="text-sm">
                   {formatDate(post.created_at)}

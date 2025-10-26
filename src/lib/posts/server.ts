@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // Server-side Supabase client for data fetching
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseServiceKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 const supabaseServer = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -17,38 +17,40 @@ type Post = {
 };
 
 /**
- * Get a single post by ID
+ * Get a single published post by ID (public access)
+ * RLS automatically filters: published = true
  */
-export async function getPost(id: string): Promise<Post | null> {
+export async function getPublishedPost(id: string): Promise<Post | null> {
   try {
     const { data, error } = await supabaseServer
       .from('posts')
       .select('*')
       .eq('id', id)
-      .eq('published', true) // Only published posts for public view
       .single();
 
     if (error) {
-      console.error('Error fetching post:', error);
+      console.error('Error fetching published post:', error);
       return null;
     }
 
     return data;
   } catch (err) {
-    console.error('Error in getPost:', err);
+    console.error('Error in getPublishedPost:', err);
     return null;
   }
 }
 
+
+
 /**
  * Get all published posts (for generateStaticParams)
+ * RLS automatically filters: published = true
  */
 export async function getPublishedPosts(): Promise<Post[]> {
   try {
     const { data, error } = await supabaseServer
       .from('posts')
       .select('*')
-      .eq('published', true)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -65,13 +67,13 @@ export async function getPublishedPosts(): Promise<Post[]> {
 
 /**
  * Get post IDs for static generation
+ * RLS automatically filters: published = true
  */
 export async function getPostIds(): Promise<string[]> {
   try {
     const { data, error } = await supabaseServer
       .from('posts')
-      .select('id')
-      .eq('published', true);
+      .select('id');
 
     if (error) {
       console.error('Error fetching post IDs:', error);

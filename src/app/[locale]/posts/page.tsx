@@ -71,6 +71,8 @@ function PostsPageContent() {
         const to = from + postsPerPage - 1;
 
         // Build query with count
+        // Must explicitly filter published = true
+        // (RLS allows users to see their own drafts, but blog listing should only show published)
         let query = supabase
           .from('posts')
           .select('*', { count: 'exact' })
