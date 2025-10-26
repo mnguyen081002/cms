@@ -16,17 +16,13 @@ type PostPageProps = {
   params: Promise<{ locale: string; id: string }>;
 };
 
-// ISR: Revalidate every 60 seconds
 export const revalidate = 60;
 
-// Allow dynamic params (for draft posts not in generateStaticParams)
 export const dynamicParams = true;
 
-// Generate static params for published posts
 export async function generateStaticParams() {
   const postIds = await getPostIds();
 
-  // Generate params for both locales
   const params = [];
   for (const id of postIds) {
     params.push({ locale: 'en', id });
@@ -36,7 +32,6 @@ export async function generateStaticParams() {
   return params;
 }
 
-// Generate dynamic metadata for SEO
 export async function generateMetadata(props: PostPageProps): Promise<Metadata> {
   const { locale, id } = await props.params;
   const post = await getPostById(id);
@@ -127,11 +122,6 @@ export default async function PostDetailPage(props: PostPageProps) {
                 <h1 className="text-heading flex-1 text-4xl font-semibold md:text-5xl">
                   {post.title}
                 </h1>
-                {!post.published && (
-                  <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-800">
-                    DRAFT
-                  </span>
-                )}
               </div>
               <div className="mb-6 flex items-center justify-between text-gray-600">
                 <time dateTime={post.created_at} className="text-sm">

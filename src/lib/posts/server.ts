@@ -1,4 +1,4 @@
-import {  createStaticSupabaseClient } from '@/lib/supabase/server';
+import { createStaticSupabaseClient } from '@/lib/supabase/server';
 import type { Post } from '@/types/post';
 
 /**
@@ -11,19 +11,19 @@ import type { Post } from '@/types/post';
  * - Public users: Can only see published posts
  * - Authenticated users: Can see published posts + their own drafts
  *
- * Note: Functions used in static generation (sitemap, generateStaticParams)
- * use createStaticSupabaseClient() to avoid cookies dependency.
+ * Note: All functions use createStaticSupabaseClient() for consistency.
+ * RLS policies automatically handle access control based on the request context.
  */
 
 /**
- * Get a single post by ID with RLS
+ * Get a single post by ID
  *
  * @param id - Post ID
- * @returns Post if found and accessible, null otherwise
+ * @returns Post if found and accessible per RLS policies, null otherwise
  *
- * Access:
- * - Public: Only published posts
- * - Authenticated: Published posts + own drafts
+ * RLS automatically handles access:
+ * - Anonymous users: Only published posts
+ * - Authenticated users: Published posts + own drafts
  */
 export async function getPostById(id: string): Promise<Post | null> {
   try {
@@ -33,6 +33,7 @@ export async function getPostById(id: string): Promise<Post | null> {
       .from('posts')
       .select('*')
       .eq('id', id)
+      .eq('published', true) // Explicitly filter for published posts on public pages
       .single();
 
     if (error) {

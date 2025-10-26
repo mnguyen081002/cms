@@ -16,8 +16,6 @@ import { Textarea } from '@/components/ui/Textarea';
 import { useAuth } from '@/lib/auth/context';
 import { createClient } from '@/lib/supabase/client';
 import { validateAll, validatePostContent, validatePostTitle } from '@/utils/validation';
-import { revalidate } from '../../posts/[id]/page';
-import { revalidatePath } from 'next/cache';
 
 export default function NewPostPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
